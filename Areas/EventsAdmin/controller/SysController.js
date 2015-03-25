@@ -2,14 +2,11 @@ var
 	Moment = require('moment'),
 	UtilTool = require('../models/UtilTool'),
 	Status = require('../models/DataObj/Status'),
-	AdminLoginFactory = require('../models/AdminLoginFactory'),
-	
-	S21newyarProfileFactory = require(appRoot + '/Areas/21newyear/models/ProfileFactory');;
+	AdminLoginFactory = require('../models/AdminLoginFactory');
 
 var 
 	tool = new UtilTool();
-	loginFact = new AdminLoginFactory(),
-	s21newyarProfileFactory = new S21newyarProfileFactory();
+	loginFact = new AdminLoginFactory();
 
 var SysController = function(){
 	
