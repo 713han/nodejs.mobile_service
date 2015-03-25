@@ -1,0 +1,56 @@
+<% var home = EventsAdmin.home %>
+<% layout('../share/master') -%>
+<% script(home + '/assets/angularjs/S21NYPoemList.js') -%>
+<div class="container-fluid UserListWrap" ng-app="S21nyPoemListApp">
+	<div class="page-header">
+		<h1 id="rwd_tables" class="title">幸運靈籤個資蒐集</h1>
+	</div>
+	<div class="table-responsive" ng-controller="PoemListController as poemList">
+		<div class="table-functions">
+			<button type="button" class="btn btn-success new-btn" onclick="location.href='poemlist_excel'">
+				<span class="glyphicon glyphicon-download-alt icon-left"></span>匯出 Excel
+			</button>
+			<button type="button" class="btn btn-success new-btn" onclick="location.href='poemgrouplist_excel'">
+				<span class="glyphicon glyphicon-download-alt icon-left"></span>匯出 Excel (不重複)
+			</button>
+		</div>
+		<table class="table" ng-init="poemList.getPoemList(1)">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>ID</th>
+					<th>姓名</th>
+					<th>電話</th>
+					<th>Email</th>					
+					<th>電子報</th>							
+					<th>來源IP</th>
+					<th>建立日期</th>
+					<th>抽籤序號</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="poem in list">
+    				<td>{{$index+1}}</td>
+    				<td>{{poem.id}}</td>
+    				<td>{{poem.name}}</td>
+    				<td>{{poem.phone}}</td>  
+    				<td>{{poem.email}}</td>   
+    				<td><span ng-class="getLabelClass(poem.isreceived[0])">{{poem.isreceived[0] | epaperStatus}}</span></td>
+    				<td>{{poem.ipaddr}}</td> 
+    				<td>{{poem.createdate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+    				<td><a href="http://event.yam.com/21newyear/data/{{poem.winid}}.jpeg" target="_blank">{{poem.winid}}</a></td>  
+    			</tr>
+    		<tbody>
+		</table>
+		<div align="center">
+			 <ul class="pagination">	
+				<li><a class="page" href="#" ng-click="poemList.getPoemList(1)">«</a></li>
+				<li ng-repeat="n in [] | range:numberOfPages | startFrom:startPage | limitTo:limitPage + 2 " 
+					ng-class="getCurrentPageClass(n)">
+					<a class="page" href="#" ng-click="poemList.getPoemList(n)">{{n}}</a>
+				</li>
+				<li><a class="page" href="#" ng-click="poemList.getPoemList(numberOfPages)">»</a></li>	  
+			</ul>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,84 @@
+
+<!-- Sidebar -->
+<%
+var home = EventsAdmin.home 
+var isInRole = EventsAdmin.isInRole 
+
+var SystemGroup = [1,2,3];
+var S21NYGroup = [5,6,7,8];
+var MYVITAGroup = [9,10,11];
+
+var System = isInRole(SystemGroup);
+var S21newyear = isInRole(S21NYGroup);
+var Myvita = isInRole(MYVITAGroup);
+%>
+<div id="sidebar-wrapper">
+	<% if(S21newyear === true) { %>
+	<div class="sidebar-container">
+		<div class="sidebar">
+			<ul class="nav-sidebar">				
+				<li class="dropdown-contents nav-list accordion <%=['S21NYProfileList','S21NYPoemList','S21NYWinnerList'].indexOf(menu) >= 0 ? 'open' : '' %>">
+					<a href="javascript: void(0)" class="dropdown-toggle sub-title">
+						<span class="glyphicon glyphicon-folder-open icon-left"></span>21世紀不動產
+						<div class="acc-arrows">
+							<span class="glyphicon glyphicon-chevron-up icon-left"></span>
+							<span class="glyphicon glyphicon-chevron-down icon-left"></span>
+						</div>
+					</a>
+					<ul class="dropdown-menu" role="menu">
+						<% if(isInRole([6]) === true) { %><li class="dropdown-contents <%=(menu==='S21NYProfileList') ? 'active' : ''%>"><a href="<%=home%>/S21NY/profilelist" class="link-btn">個資蒐集</a></li><% } %>
+						<% if(isInRole([7]) === true) { %><li class="dropdown-contents <%=(menu==='S21NYPoemList') ? 'active' : ''%>"><a href="<%=home%>/S21NY/poemlist" class="link-btn">幸運靈籤個資</a></li><% } %>
+						<% if(isInRole([8]) === true) { %><li class="dropdown-contents <%=(menu==='S21NYWinnerList') ? 'active' : ''%>"><a href="<%=home%>/S21NY/winnerlist" class="link-btn">新春領紅包名單</a></li><% } %>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<% } %>
+	<% if(Myvita === true) { %>
+	<div class="sidebar-container">
+		<div class="sidebar">
+			<ul class="nav-sidebar">				
+				<li class="dropdown-contents nav-list accordion <%=['MYVITAGameList', 'MYVITAProfileList'].indexOf(menu) >= 0 ? 'open' : '' %>">
+					<a href="javascript: void(0)" class="dropdown-toggle sub-title">
+						<span class="glyphicon glyphicon-folder-open icon-left"></span>中保無限+
+						<div class="acc-arrows">
+							<span class="glyphicon glyphicon-chevron-up icon-left"></span>
+							<span class="glyphicon glyphicon-chevron-down icon-left"></span>
+						</div>
+					</a>
+					<ul class="dropdown-menu" role="menu">
+						<% if(isInRole([10]) === true) { %><li class="dropdown-contents <%=(menu==='MYVITAGameList') ? 'active' : ''%>"><a href="<%=home%>/MYVITA/gamelist" class="link-btn">好運排行榜</a></li><% } %>
+						<% if(isInRole([11]) === true) { %><li class="dropdown-contents <%=(menu==='MYVITAProfileList') ? 'active' : ''%>"><a href="<%=home%>/MYVITA/profilelist/all/0" class="link-btn">個人資料</a></li><% } %>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<% } %>
+	<% if(System === true) { %>
+	<div class="sidebar-container">
+		<div class="sidebar">
+			<ul class="nav-sidebar">				
+				<li class="dropdown-contents nav-list accordion <%=['SysCreateUser','SysUserList'].indexOf(menu) >= 0 ? 'open' : '' %>">
+					<a href="javascript: void(0)" class="dropdown-toggle sub-title">
+						<span class="glyphicon glyphicon-cog icon-left"></span>System Settings
+						<div class="acc-arrows">
+							<span class="glyphicon glyphicon-chevron-up icon-left"></span>
+							<span class="glyphicon glyphicon-chevron-down icon-left"></span>
+						</div>
+					</a>
+					<ul class="dropdown-menu" role="menu">
+						<% if(isInRole([2]) === true) { %><li class="dropdown-contents <%=(menu==='SysCreateUser') ? 'active' : ''%>"><a href="<%=home%>/Sys/createUser" class="link-btn">建立使用者</a></li><% } %>
+						<% if(isInRole([3]) === true) { %><li class="dropdown-contents <%=(menu==='SysUserList') ? 'active' : ''%>"><a href="<%=home%>/Sys/userlist" class="link-btn">使用者管理</a></li><% } %>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<% } %>
+	<a href="javascript: void(0)" class="sidebar-btn">
+		<span class="btns open-btn"><span class="glyphicon glyphicon-chevron-down"></span></span>
+		<span class="btns collapse-btn"><span class="glyphicon glyphicon-chevron-up"></span></span>
+	</a>
+</div>

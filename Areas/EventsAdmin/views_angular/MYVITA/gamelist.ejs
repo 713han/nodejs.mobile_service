@@ -1,0 +1,65 @@
+<% var home = EventsAdmin.home %>
+<% layout('../share/master') -%>
+<% script(home + '/assets/angularjs/MYVITAGamelist.js') -%>
+<div class="container-fluid PrizeListWrap" ng-app="GameListApp">
+	<div class="page-header">
+		<h1 id="rwd_tables" class="title">好運排行榜</h1>
+	</div>
+	<div class="table-responsive"
+		ng-controller="GameListController as gameList">
+		<div class="table-functions">			
+		</div>
+		<table class="table" ng-init="gameList.getGameList(1)">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>ID</th>					
+					<th>FaceBook ID</th>
+					<th>FaceBook 名稱</th>
+					<th>累積人數</th>
+					<th>測字結果</th>
+					<th>湊字狀態</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="game in list">
+					<td>{{$index+1}}</td>
+					<td>
+						<a href="<%=home%>/MYVITA/profilelist/GameID/{{game.id}}" >{{game.id}}</a>
+					</td>					
+					<td>{{game.fbid}}</td>
+					<td>{{game.fbname}}</td>
+					
+					<td>
+						<a href="<%=home%>/MYVITA/profilelist/ParentID/{{game.id}}" >{{game.gamecount}}</a>
+					</td>
+					<td>
+						<span class="label label-primary">{{game.gameresult | resultStatus}}</span>						
+					</td>
+					<td>
+						<span ng-class="getClass(16, game.gamefinish)">中</span> 
+						<span ng-class="getClass(8, game.gamefinish)">保</span>
+						<span ng-class="getClass(4, game.gamefinish)">無</span>
+						<span ng-class="getClass(2, game.gamefinish)">限</span>
+						<span ng-class="getClass(1, game.gamefinish)">+</span>
+					</td>
+				</tr>
+			<tbody>
+		</table>
+		<div align="center">
+			<ul class="pagination">
+				<li>
+					<a class="page" href="#" ng-click="gameList.getGameList(1)">«</a>
+				</li>
+				<li ng-repeat="n in [] | range:numberOfPages | startFrom:startPage | limitTo:limitPage + 2 "
+					ng-class="getCurrentPageClass(n)">
+					<a class="page" href="#" ng-click="gameList.getGameList(n)">{{n}}</a>
+				</li>
+				<li>
+					<a class="page" href="#" ng-click="gameList.getGameList(numberOfPages)">»</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

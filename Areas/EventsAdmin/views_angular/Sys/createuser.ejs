@@ -1,0 +1,75 @@
+<% var home = EventsAdmin.home %>
+<% layout('../share/master') -%>
+<% stylesheet(home + '/assets/customcss/easyui_tree.css') -%>
+<% script(home + '/assets/customjs/jquery.easyui.min.1.4.1.js') -%>
+<% script(home + '/assets/angularjs/SysCreateUser.js') -%>
+<div class="container-fluid CreateUserWrap" ng-app="SysCreateUserApp" ng-controller="CreateUserController as CreateUser">
+	<div class="panel panel-info" >
+		<div class="panel-heading">
+			<h3 class="panel-title">建立使用者</h3>
+		</div>
+		<div class="panel-body">
+			<form name="CreateForm" class="form" ng-submit="CreateForm.$valid && CreateUser.submit()" noValidate>
+					<div class="obj_gap">
+					<div class="input-group">
+						<span class="input-group-addon">
+						<span class="glyphicon glyphicon glyphicon-tag"></span>
+						</span>
+						<input 
+							type="text" 
+							class="form-control" 
+							placeholder="Nick Name" 
+							id="nickname" 
+							name="nickname"
+							ng-model="CreateUser.nickname" 
+							ng-focus="showAlert && CreateUser.resetAlert()"
+							required >
+					</div>
+				</div>
+				<div class="obj_gap">
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon  glyphicon-user"></span>
+						</span>
+						<input 
+							type="text" 
+							class="form-control" 
+							placeholder="Account" 
+							id="username" 
+							name="username" 
+							ng-model="CreateUser.username" 
+							ng-focus="showAlert && CreateUser.resetAlert()"
+							required >
+					</div>
+				</div>
+				<div class="obj_gap">
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-lock"></span>
+						</span>
+						<input 
+							type="password" 
+							class="form-control" 
+							placeholder="Password" 
+							id="password" 
+							name="password"
+							ng-model="CreateUser.password"
+							ng-focus="showAlert && CreateUser.resetAlert()"
+							required >
+					</div>
+				</div>
+				<div class="desc-box">
+					<h4><span class="label label-success">系統權限</span></h4>
+					<ul id="tt" 
+	                    class="easyui-tree" 
+	                    data-options="url:'rolelistinit/0',
+	                                  method:'get',
+	                                  animate:true,
+	                                  checkbox:true" />
+				</div>
+				<button type="submit" class="btn btn-primary btnCreateUser" data-target="#myModal" data-toggle="modal" ng-disabled="CreateForm.$invalid">建立</button>
+			</form>
+		</div>
+	</div>
+	<div ng-class="alertClass" role="alert" align="center" ng-show="showAlert">{{msg}}</div>
+</div>

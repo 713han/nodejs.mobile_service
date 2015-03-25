@@ -1,0 +1,55 @@
+<% var home = EventsAdmin.home %>
+<% layout('../share/master') -%>
+<% script(home + '/assets/angularjs/S21NYProfileList.js') -%>
+<div class="container-fluid UserListWrap" ng-app="S21nyProfileListApp">
+	<div class="page-header">
+		<h1 id="rwd_tables" class="title">個資總覽</h1>
+	</div>
+	<div class="table-responsive" ng-controller="ProfileListController as profileList">		
+		<table class="table" ng-init="profileList.getProfileList(1)">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>ID</th>
+					<th>姓名</th>
+					<th>電話</th>
+					<th>Email</th>
+					<th>地址</th>
+					<th>電子報</th>
+					<th>資料來源</th>
+					<th>來源IP</th>
+					<th>建立日期</th>
+					<th>抽籤/中獎</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="profile in list">
+    				<td>{{$index+1}}</td>
+    				<td>{{profile.id}}</td>
+    				<td>{{profile.name}}</td>
+    				<td>{{profile.phone}}</td>  
+    				<td>{{profile.email}}</td>
+    				<td>{{profile.address}}</td>
+    				<td><span ng-class="getLabelClass(profile.isreceived[0])">{{profile.isreceived[0] | epaperStatus}}</span></td>
+    				<td>{{profile.source | sourceType }}</td>
+    				<td>{{profile.ipaddr}}</td> 
+    				<td>{{profile.createdate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+    				<td>
+    					<span class="label label-danger" ng-if="profile.winid && profile.winid.type === 'prize'">中獎</span>
+    					<span ng-if="profile.winid && profile.winid.type === 'poem'">{{profile.winid.value}}</span>
+    				</td>  
+    			</tr>
+    		<tbody>		
+		</table>
+		<div align="center">
+			<ul class="pagination">	
+				<li><a class="page" href="#" ng-click="profileList.getProfileList(1)">«</a></li>
+				<li ng-repeat="n in [] | range:numberOfPages | startFrom:startPage | limitTo:limitPage + 2 " 
+					ng-class="getCurrentPageClass(n)">
+					<a class="page" href="#" ng-click="profileList.getProfileList(n)">{{n}}</a>
+				</li>
+				<li><a class="page" href="#" ng-click="profileList.getProfileList(numberOfPages)">»</a></li>	  
+			</ul>
+		</div>
+	</div>
+</div>

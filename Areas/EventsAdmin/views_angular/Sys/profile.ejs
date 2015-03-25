@@ -1,0 +1,65 @@
+<% var home = EventsAdmin.home %>
+<% layout('../share/master') -%>
+<% stylesheet(home + '/assets/customcss/SysProfile.css') -%>
+<% stylesheet(home + '/assets/customcss/easyui_tree.css') -%>
+<% script(home + '/assets/angularjs/jquery.easyui.min.1.4.1.js') -%>
+<% script(home + '/assets/angularjs/SysProfile.js') -%>
+<div class="container-fluid ProfileWrap" ng-app="SysProfileApp" ng-controller="ProfileController as profile">
+	<div class="page-header">
+		<h1 id="panels" class="title">
+		使用者資料
+		</h1>
+	</div>
+	<div class="panel panel-info" ng-init="profile.getProfile(<%= userID%>)">
+		<div class="panel-heading">
+			<h3 class="panel-title">Profile</h3>
+		</div>
+		<div class="panel-body" >
+			<div class="row">
+				<div class="col-md-3">					
+					<img ng-src="{{profileData.ProfilePhoto || '/EventsAdmin/assets/images/RD2-1.png'}}" alt="..." class="user-image" />
+					<h4>					
+						<span ng-class="getLabelClass(profileData.IsActive[0])">{{profileData.IsActive[0] | status}}</span>					
+					</h4>
+				</div>
+				<div class="col-md-9">
+					<div class="label-group">
+						<span class="label label-success">編號</span><span class="label-text">{{profileData.ID}}</span>
+					</div>
+					<div class="label-group">
+						<span class="label label-success">暱稱</span>
+						<input type="text" class="form-control" id="nickname" name="nickname" ng-model="profileData.NickName">
+					</div>
+					<div class="label-group">
+						<span class="label label-success">帳號</span><span class="label-text">{{profileData.UserName}}</span>
+					</div>
+					<div class="label-group">
+						<span class="label label-success">建立人員</span><span class="label-text">{{profileData.CreateByName || 'System'}}</span>
+					</div>
+					<div class="label-group">
+						<span class="label label-success">建立時間</span><span class="label-text">{{profileData.CreateDate | date:'yyyy-MM-dd HH:mm:ss' }}</span>
+					</div>
+					<div class="label-group">
+						<span class="label label-success">最後登入</span><span class="label-text">{{profileData.LastLoginDate | date:'yyyy-MM-dd HH:mm:ss'}}</span>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class=" col-md-12">
+					<div class="desc-box">
+						<h4><span class="label label-success">系統權限</span></h4>
+						<ul id="tt" 
+                            class="easyui-tree" 
+                            data-options="url:'rolelist/0/<%=userID%>',
+                                          method:'get',
+                                          animate:true,
+                                          checkbox:true" />
+					</div>
+				</div>
+			</div>
+			<input type="hidden" id="userID" name="userID" ng-model="profileData.ID" />
+			<button class="btn btn-primary btnUpdate" data-target="#myModal" data-toggle="modal" ng-click="profile.submit()">儲存</button>
+		</div>
+	</div>
+	<div ng-class="alertClass" role="alert" align="center" ng-show="showAlert">{{msg}}</div>	
+</div>

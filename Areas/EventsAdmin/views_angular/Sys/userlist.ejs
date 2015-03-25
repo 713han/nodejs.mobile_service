@@ -1,0 +1,64 @@
+<% var home = EventsAdmin.home %>
+<% layout('../share/master') -%>
+<% script(home + '/assets/angularjs/SysUserList.js') -%>
+<div class="container-fluid UserListWrap" ng-app="SysUserListApp">
+	<div class="page-header">
+		<h1 id="rwd_tables" class="title">使用者管理</h1>
+	</div>
+	<div class="table-responsive" ng-controller="UserListController as userList">
+		<div class="table-functions">
+			<button type="button" class="btn btn-success new-btn" onclick="location.href='createuser'">
+				<span class="glyphicon glyphicon-plus icon-left"></span>New
+			</button>
+		</div>
+		<table class="table" ng-init="userList.getUserList(1)">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>ID</th>
+					<th>Nick Name</th>
+					<th>User Name</th>
+					<th>Date</th>
+					<th>Status</th>
+					<th>Edit</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="user in list">	
+					<td>{{$index+1}}</td>	
+					<td>{{user.id}}</td>	
+					<td>{{user.nickname}}</td>	
+					<td>{{user.username}}</td>	
+					<td>
+						建立:{{user.createdate | date:'yyyy-MM-dd HH:mm:ss'}}<br />
+						登入:{{user.lastlogindate | date:'yyyy-MM-dd HH:mm:ss'}}
+					</td>	
+					<td>
+						<span ng-class="getLabelClass(user.isactive[0])">{{user.isactive[0] | status}}</span>
+					</td>	
+					<td>	
+	    				<button type="button" class="btn btn-danger btn-sm btn-enable" ng-show="user.isactive[0] == 1" ng-click="userList.setStatus(user.id, 0)" >
+	    					<span class="glyphicon glyphicon-remove"></span>
+	    				</button>
+	    				<button type="button" class="btn btn-success btn-sm btn-sm btn-disable" ng-show="user.isactive[0] == 0" ng-click="userList.setStatus(user.id, 1)" >
+	    					<span class="glyphicon glyphicon-ok"></span>
+	    				</button>
+						<button type="button" class="btn btn-primary btn-sm btn-edit" ng-click="userList.edit(user.id)">
+							<span class="glyphicon glyphicon-edit"></span>
+						</button>	
+					</td>
+				</tr>
+			<tbody>
+		</table>
+		<div align="center">
+			<ul class="pagination">	
+				<li><a class="page" href="#" ng-click="userList.getUserList(1)">«</a></li>
+				<li ng-repeat="n in [] | range:numberOfPages | startFrom:startPage | limitTo:limitPage + 2 " 
+					ng-class="getCurrentPageClass(n)">
+					<a class="page" href="#" ng-click="userList.getUserList(n)">{{n}}</a>
+				</li>
+				<li><a class="page" href="#" ng-click="userList.getUserList(numberOfPages)">»</a></li>	  
+			</ul>
+		</div>
+	</div>
+</div>
