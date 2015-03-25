@@ -108,10 +108,12 @@ SysController.prototype.getProfileForm = function(req, res){
  */
 SysController.prototype.getProfileData = function(req, res){
 	var id = req.body.id;
-	loginFact.getData(id, function(err, result){
-		delete result.Object.UserPass;
-		delete result.Object.CreateByID;
-		res.send(result);
+	loginFact.getData(id, function(err, result){	
+		if(!result.Object == null){
+			delete result.Object.UserPass;
+			delete result.Object.CreateByID;
+		}		
+		res.send(result);			
 	});	
 };
 
