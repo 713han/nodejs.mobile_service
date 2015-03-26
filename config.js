@@ -18,6 +18,9 @@ switch(process.env.SERVER_env){
 			checkExpirationInterval: 900000,
 		    expiration: 1000 * 60 * 30
 		};
+		
+		config.MongoDBConn = 'mongodb://127.0.0.1:27017/PhotoService';
+		
 		break;
 	case 'production':
 		config.EventsConn = {
@@ -37,6 +40,9 @@ switch(process.env.SERVER_env){
 			checkExpirationInterval: 900000,
 		    expiration: 1000 * 60 * 30
 		};
+		
+		config.MongoDBConn = 'mongodb://127.0.0.1:27017/PhotoService';
+		
 		break;
 	default:
 		config.EventsConn = {
@@ -56,7 +62,9 @@ switch(process.env.SERVER_env){
 			checkExpirationInterval: 900000,
 		    expiration: 1000 * 60 * 30
 		};
+		
+		config.MongoDBConn = 'mongodb://127.0.0.1:27017/PhotoService';
 		break;
 }
-
+	
 module.exports = config;

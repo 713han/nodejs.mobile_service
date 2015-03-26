@@ -1,4 +1,4 @@
-var UtilTool = require('../UtilTool');
+var UtilTool = require(appRoot + '/models/UtilTool');
 
 var AdminLogin = function(){
 	this.id = 0;

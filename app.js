@@ -15,7 +15,8 @@ var Express = require('express'),
 	Flash = require('connect-flash'),
 	Log4js = require('log4js'),
 	Config = require('./config'),
-	EventsAdminAreaRegistration = require('./Areas/EventsAdmin/EventsAdminAreaRegistration');
+	EventsAdminAreaRegistration = require('./Areas/EventsAdmin/EventsAdminAreaRegistration'),
+	APIAreaRegistration = require('./Areas/API/APIAreaRegistration');
 	
 var app = Express(),
 	applog  = Log4js.getLogger();
@@ -80,20 +81,19 @@ if (Cluster.isMaster) {
 	// 監測文件改動，如果有修改，就將所有的 worker kill 掉
 	Fs.watch(__dirname, function(event, filename) {		
 		killAllThread();
-	});
-	
+	});	
 	
 	function newThread(){
 		var worker = Cluster.fork();
 		workers[worker.process.pid] = worker.id;
-	}
+	};
 	
 	function killAllThread(){
 		for(var pid in workers){
 			Cluster.workers[workers[pid]].kill();	
 			delete workers[pid];					
 		}
-	}
+	};
 	
 	
 } else {
@@ -105,7 +105,8 @@ if (Cluster.isMaster) {
 		process.exit(0);
 	});
 	
-	eventsAdmin = new EventsAdminAreaRegistration(app);
+	var eventsAdmin = new EventsAdminAreaRegistration(app);
+	var api = new APIAreaRegistration(app);
 	
 	Http.createServer(app).listen(app.get('port'));
 }

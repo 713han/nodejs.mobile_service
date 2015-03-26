@@ -1,12 +1,13 @@
 var
 	Async = require('async'),
-	Status = require('./DataObj/Status'),
 	RoleList = require('./DataObj/RoleList'),
 	DALMyAdminLogin = require('./DAL/DALMyAdminLogin'),
 	DALMyAdminMapping = require('./DAL/DALMyAdminMapping'),
 	DALMyAdminRole = require('./DAL/DALMyAdminRole'),
 	AdminLogin = require('./DataObj/AdminLogin'),
-	UtilTool = require('./UtilTool');	
+	
+	Status = require(appRoot + '/models/DataObj/Status'),	
+	UtilTool = require(appRoot + '/models/UtilTool');
 
 var 
 	dalLogin = new DALMyAdminLogin(),
@@ -326,8 +327,11 @@ AdminLoignFactory.prototype.updUser = function(userid, nickname, roleIDs, result
 				}					
 			});
 		}
-		    
-	    Async.eachSeries(roleIDs, each, done);
+		if(roleIDs.length > 0){
+			Async.eachSeries(roleIDs, each, done);
+		}else{
+			callback(null, obj.id);
+		}
 		
     }], function(err, resultObj) {
 		var status = new Status();

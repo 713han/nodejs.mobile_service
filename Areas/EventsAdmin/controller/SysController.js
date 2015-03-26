@@ -1,7 +1,7 @@
 var 
 	Moment = require('moment'),
-	UtilTool = require('../models/UtilTool'),
-	Status = require('../models/DataObj/Status'),
+	Status = require(appRoot + '/models/DataObj/Status'),	
+	UtilTool = require(appRoot + '/models/UtilTool'),
 	AdminLoginFactory = require('../models/AdminLoginFactory');
 
 var 
