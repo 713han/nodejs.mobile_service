@@ -1,17 +1,15 @@
 var	
 	Async = require('async'),
+	Util = require('util'),
 	Mongodb = require('mongodb'),
 	ObjectID = require('mongodb').ObjectID,
 	Config = require(appRoot + '/config'),
-	UtilTool = require(appRoot + '/models/UtilTool');
+	UtilTool = require(appRoot + '/models/UtilTool'),
+	DALMongoBasic = require('./DALMongoBasic');
 	
 var 
 	mongoDbClient = Mongodb.MongoClient,
 	utilObj = new UtilTool();
-
-var  
-	DALMongoBasic = require('./DALMongoBasic'),
-	Util = require('util');
 
 var DALMongoGPS = function(){
 	this.collectionName = 'GPSData';		
@@ -42,8 +40,8 @@ DALMongoGPS.prototype.getData = function(strID, result){
 /*
  * result:function(err, data);
  */
-DALMongoGPS.prototype.getList = function(result) {
-	DALMongoGPS.super_.prototype.getList(this.collectionName, result);
+DALMongoGPS.prototype.getList = function(selectField, result) {
+	DALMongoGPS.super_.prototype.getList(this.collectionName, selectField, result);
 };
 
 module.exports = DALMongoGPS;

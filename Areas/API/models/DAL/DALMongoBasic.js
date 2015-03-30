@@ -142,7 +142,6 @@ DALMongoBasic.prototype.update = function(collectionName, strID, updateSetObj, r
 	var connectString = Config.MongoDBConn;	
 	
 	var updateObj = { _id : ObjectID.createFromHexString(strID) };
-	//var updateSetObj = {$set:{createDate : t}};
 	
 	Async.waterfall([
 	function(callback) { 
@@ -217,10 +216,8 @@ DALMongoBasic.prototype.getData = function(collectionName, strID, result){
 /*
  * result:function(err, data);
  */
-DALMongoBasic.prototype.getList = function(collectionName, result) {
+DALMongoBasic.prototype.getList = function(collectionName, selectField, result) {
 	var connectString = Config.MongoDBConn;
-	
-	var selectField = { _id:1 };
 	
 	Async.waterfall([
 	function(callback) { 
@@ -233,15 +230,27 @@ DALMongoBasic.prototype.getList = function(collectionName, result) {
 		});
 	},
 	function(db, collection, callback) { 
-		collection.find(null, selectField).toArray(function(err, data) {	
-			if (err) {
-				callback(err, 'DALMongoBasic.getList:find');
-			}else{
-				result(null, data);
-				callback(null, 'Done');
-			}
-			db.close();
-		});	
+		if(selectField){
+			collection.find(null, selectField).toArray(function(err, data) {	
+				if (err) {
+					callback(err, 'DALMongoBasic.getList:find');
+				}else{
+					result(null, data);
+					callback(null, 'Done');
+				}
+				db.close();
+			});
+		}else{
+			collection.find().toArray(function(err, data) {	
+				if (err) {
+					callback(err, 'DALMongoBasic.getList:find');
+				}else{
+					result(null, data);
+					callback(null, 'Done');
+				}
+				db.close();
+			});
+		}
 	}], function (err, resultObj) {		
 			if(err){
 				var obj = {

@@ -2,7 +2,7 @@ var
 	Async = require('async'),
 	Config = require(appRoot + '/config'),
 	Status = require(appRoot + '/models/DataObj/Status'),
-	DALMongoGPS = require('../models/DAL/DALMongoGPS');	
+	DALMongoGPS = require('./DAL/DALMongoGPS');	
 
 var	
 	dalGPS = new DALMongoGPS();
@@ -43,8 +43,9 @@ GPSFactory.prototype.getGPSData = function(key, result){
  */
 GPSFactory.prototype.getGPSList = function(result){
 	Async.waterfall([ 
-	function(callback) {
-		dalGPS.getList(function(err, data){
+	function(callback) {		
+		var selectField = { _id:1 };		
+		dalGPS.getList(selectField, function(err, data){
 			if(err){
 				callback('Get GPS data list failed', err);
 	    	}else{

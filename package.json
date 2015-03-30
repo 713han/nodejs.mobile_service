@@ -1,5 +1,5 @@
 {
-  "name": "EventSite",
+  "name": "MobileSite",
   "version": "0.0.8",
   "private": true,
   "scripts": {
@@ -27,6 +27,11 @@
     "node-uuid": "~1.4.2",
     "request": "~2.51.0",
     "express-mysql-session": "~0.3.1",
-    "node-xlsx": "~0.5.1"
+    "node-xlsx": "~0.5.1",
+    "lru-cache": "^2.5.0",
+    "gm": "^1.17.0",
+    "mmmagic": "^0.3.13",
+    "exif": "^0.4.0",
+    "connect-busboy": "^0.0.1"
   }
 }
