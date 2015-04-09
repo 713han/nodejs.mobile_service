@@ -242,10 +242,10 @@ PhotoFactory.prototype.getImg = function (width, height, strPath, result) {
 PhotoFactory.prototype.imgUpload = function(strID, mimetype, file, fileName, fileHome, fileFromPath, fileToPath, result) {
 	var nameMap = this.nameMap;
 	var typeMap = this.typeMap;
+	var extName = '';
 	
 	Async.waterfall([
 	function(callback) {
-		fileName += nameMap[mimetype];
 		fstream = Fs.createWriteStream(fileFromPath + fileName);
 		file.pipe(fstream);
 		fstream.on('close', function() {
@@ -263,6 +263,7 @@ PhotoFactory.prototype.imgUpload = function(strID, mimetype, file, fileName, fil
 		});
 	},
 	function(result, callback) {
+		extName = nameMap[result];
 		if (typeMap[result] === true) {
 			Fs.mkdirParent(fileHome + fileToPath, '0755', function(err) {
 				if (err) {
@@ -282,7 +283,7 @@ PhotoFactory.prototype.imgUpload = function(strID, mimetype, file, fileName, fil
 		}
 	},
 	function(callback) {
-		Fs.rename(fileFromPath + fileName, fileHome + fileToPath + fileName, function(err) {
+		Fs.rename(fileFromPath + fileName, fileHome + fileToPath + fileName + extName, function(err) {
 			if (err) {
 				callback('file rename failed.', 'PhotoFactory.imgUpload:rename');
 			} else {
@@ -291,7 +292,7 @@ PhotoFactory.prototype.imgUpload = function(strID, mimetype, file, fileName, fil
 		});
 	},
 	function(callback) {
-		new ExifImage({ image : fileHome + fileToPath + fileName }, function(error, exifData) {
+		new ExifImage({ image : fileHome + fileToPath + fileName + extName }, function(error, exifData) {
 			if (error) {
 				callback(null, error);
 			} else {
@@ -301,7 +302,7 @@ PhotoFactory.prototype.imgUpload = function(strID, mimetype, file, fileName, fil
 	},
 	function(exifData, callback) {
 		var dataObj = new PhotoData();
-		dataObj.set(strID, fileToPath, fileName, hostname + fileToPath + fileName, exifData, callback);
+		dataObj.set(strID, fileToPath, fileName + extName, hostname + fileToPath + fileName + extName, exifData, callback);
 	},
 	function(obj, callback) {
 		dalPhoto.insert(obj, function(err, data) {

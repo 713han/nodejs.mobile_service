@@ -88,14 +88,15 @@ PhotoController.prototype.imgUpload = function(req, res) {
 			fileName = strID,
 			fileHome = imgHome,
 			fromPath = imgHome + 'temp/',
-			toPath = 'temp/Upload/',
+			toPath = 'photo/temp/Upload/',
 			fstream;
 		
 		Async.waterfall([
 		function(callback) {
+			//callback(null);
 			if(ipLimit[ip]){
 				callback(null);
-			}else{				
+			}else{
 				callback('Access Denied', 'PhotoController.imgUpload:ipLimit');
 			}
 		},
@@ -114,10 +115,10 @@ PhotoController.prototype.imgUpload = function(req, res) {
 						}
 					}
 				});
-				req.busboy.on('file', function (fieldname, file, name, encoding, mimetype) {					
+				req.busboy.on('file', function (fieldname, file, name, encoding, mimetype) {	
 					callback(null, mimetype, file);
 				});
-			}else{				
+			}else{
 				callback('File is too large', 'PhotoController.imgUpload:content-length');
 			}
 		},

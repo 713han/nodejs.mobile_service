@@ -73,14 +73,15 @@ config.lruOptions = {
 	maxAge: 1000 * 60 * 60 //milliseconds in 1 hour
 };
 
-config.cacheTime = 1000 * 60 * 60 * 24 * 7, //ms * s * min * hour * day = week
+config.cacheTime = 1000 * 60 * 60 * 24 * 7; //ms * s * min * hour * day = week
 config.uploadSize = 5 * 1024 * 1024; //byte * K * M = MB 
 config.hostname = 'http://192.168.56.103/';
 config.imgHome = '/home/OriginPhoto/';
 config.ipLimit = {
-	'10.2.10.15' : true,
-	'192.168.56.2' : true,
+	'10.2.10.15' : false,
+	'192.168.56.2' : false,
 	'10.2.3.62' : true
 };
+
 
 module.exports = config;

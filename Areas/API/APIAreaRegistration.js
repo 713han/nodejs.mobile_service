@@ -7,21 +7,23 @@ var
 var	
 	UtilTool = require(appRoot + '/models/UtilTool'),	
 	GPS = require('./controller/GPSController'),
-	Photo = require('./controller/PhotoController');
+	Photo = require('./controller/PhotoController'),
+	Stream = require('./controller/StreamController');
 
 var cacheTime = Config.cacheTime,
 	uploadSize = Config.uploadSize;
 
 var APIAreaRegistration = function(app){	
-	this.root = '/API';	
-	
+	this.root = '/API';
 
 	var
 		tool = new UtilTool(),	
 		gps = new GPS(),
-		photo = new Photo();
+		photo = new Photo(),
+		stream = new Stream();
 	
-	app.use(this.root ,Express.static(Path.join(appRoot, 'public/API'), { maxAge: cacheTime }));	
+	app.use(this.root ,Express.static(Path.join(appRoot, 'public/API'), { maxAge: cacheTime }));
+	app.use(this.root + '/data' ,Express.static(Path.join(appRoot, 'data/API'), { maxAge: cacheTime }));
 	app.get('views').push(__dirname + '/views/');
 	app.use(Busboy({	
 		limits: {
@@ -55,6 +57,9 @@ var APIAreaRegistration = function(app){
 
 	app.route(this.root + '/photo/list')
 		.get(photo.getPhotoList);
+	
+	app.route(this.root + '/stream/:name')
+		.get(stream.get);
 };	
 
 module.exports = APIAreaRegistration;

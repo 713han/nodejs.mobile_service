@@ -1,0 +1,93 @@
+<!DOCTYPE html> 
+<html>
+	<title>Welcome</title>
+	<head>
+		<link href="js/video-js-4.12.5/video-js.css" rel="stylesheet">
+	</head>
+	<body>		
+		<!-- <video width="320" height="240" controls>
+			<source src="stream/FURIOUS7_SAMPLE.mp4" type="video/mp4"/>
+			fallback
+			Your browser does not support the <code>video</code> element.
+		</video> -->
+		<!-- poster="http://img.youtube.com/vi/D_VRSFpUcp0/0.jpg" -->
+		<video 
+			id="example_video_1" 
+			class="video-js vjs-default-skin"
+  			controls 
+  			preload="false" 
+  			width="740" height="480"
+			
+  			data-setup='{"example_option":true}'>
+			<source src="stream/FURIOUS7_SAMPLE.mp4" type="video/mp4"/>
+			<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+		</video>
+		<a href="#" class="change1">1080p</a>&nbsp;<a href="#" class="change2">720p</a>&nbsp;<a href="#" class="change3">240p</a>
+	</body>
+	<script	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="js/video-js-4.12.5/video.js"></script>
+	<script type="text/javascript">  		
+  		$(document).ready(function() {
+  			document.createElement('video');
+  			document.createElement('audio');
+  			document.createElement('track');
+  			
+  			player.init();
+		});
+		
+		var player = (function (o) {
+		    "use strict";
+		    
+		    var $myPlayer,
+		    	$changeBtn1,
+		    	$changeBtn2,
+		    	$changeBtn3;		    	
+		
+		    o.init = function () {
+		        DOMCache();
+		        bindEvent();
+		        initOnce();
+		    }
+		
+		    var DOMCache = function () {
+		    	$changeBtn1 = $('.change1');
+		    	$changeBtn2 = $('.change2');
+		    	$changeBtn3 = $('.change3');
+		    }
+		
+		    var bindEvent = function () {
+		    	$changeBtn1.on('click', function(e){
+		    		e.stopPropagation();
+    				e.preventDefault();
+		    		play('stream/FURIOUS7_SAMPLE.mp4');
+		    	});
+		    	$changeBtn2.on('click', function(e){
+		    		e.stopPropagation();
+    				e.preventDefault();
+		    		play('stream/FURIOUS7_SAMPLE_720.mp4');
+		    	});
+		    	$changeBtn3.on('click', function(e){
+		    		e.stopPropagation();
+    				e.preventDefault();
+		    		play('stream/FURIOUS7_SAMPLE_240.mp4');
+		    	});		    	
+		    }
+		
+		    var initOnce = function () {    	
+		    	$myPlayer = videojs('example_video_1');	   	
+		    };
+		    
+		    var play = function(file){		    	
+    			var now = $myPlayer.currentTime();
+    			$myPlayer.src(file);
+    			$myPlayer.on("loadedmetadata", function(){
+    				$myPlayer.currentTime(now);
+    			});
+    			$myPlayer.play();
+		    }
+		    
+		    return o;
+		
+		})(player || {});
+	</script>
+</html> 
