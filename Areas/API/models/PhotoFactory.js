@@ -13,13 +13,17 @@ var
 	
 	PhotoData = require('./DataObject/PhotoData'),
 	ImgCache = require('./DataObject/ImgCache'),
-	DALMongoPhoto = require('./DAL/DALMongoPhoto');	
+	DALMongoPhoto = require('./DAL/DALMongoPhoto'),
+	
+	GCMFactory = require('./GCMFactory');
 
 var	
 	cache = new LruCache(Config.lruOptions),
 	hostname = Config.hostname,
 	imgHome = Config.imgHome,
-	dalPhoto = new DALMongoPhoto();
+	dalPhoto = new DALMongoPhoto(),
+	
+	gcmFactory = new GCMFactory();
 
 Fs.mkdirParent = function(dirPath, mode, callback) {
 	//Call the standard fs.mkdir
@@ -192,43 +196,51 @@ PhotoFactory.prototype.getPhotoList = function(result){
  * result:function(err, obj);
  */
 PhotoFactory.prototype.getImg = function (width, height, strPath, result) {
-	try{		
-		var path = this.getImgPath + strPath.replace(/\'/g,"/");
-		var key = width + height + strPath;		
-		var ext = getExtension(path);
-		var obj;		
-
-		var useCache = function(){
-			var show = false;
-			if(!show){		
-				if(obj.isReady === true){					
-					result(null, obj);
-					show = true;
-				}else{
-					setImmediate(useCache);
-				}				
-			}
-		};
+	try{	
+		width = (parseInt(width, 10) > 1024) ? 0 : width;
+		height = (parseInt(height, 10) > 1024) ? 0 : height;
 		
-		if(Config.isUseCache){
-			obj  = cache.get(key);
-		}
+		if(!((width===0)||(height===0))){			
 		
-		if(typeof obj === 'undefined'){				
-			obj = new ImgCache();
+			var path = this.getImgPath + strPath.replace(/\'/g,"/");
+			var key = width + height + strPath;		
+			var ext = getExtension(path);
+			var obj;		
+	
+			var useCache = function(){
+				var show = false;
+				if(!show){		
+					if(obj.isReady === true){					
+						result(null, obj);
+						show = true;
+					}else{
+						setImmediate(useCache);
+					}				
+				}
+			};
+			
 			if(Config.isUseCache){
-				cache.set(key, obj);	
+				obj  = cache.get(key);
 			}
 			
-			Gm(path)
-				.resize(width, height)
-				.toBuffer(function (err, buffer) {
-					obj.setImage(buffer, ext);					
-					result(null, obj);					
-				});			
-		}else{			
-			useCache();
-		}		
+			if(typeof obj === 'undefined'){				
+				obj = new ImgCache();
+				if(Config.isUseCache){
+					cache.set(key, obj);	
+				}
+				
+				Gm(path)
+					.resize(width, height)
+					.toBuffer(function (err, buffer) {
+						obj.setImage(buffer, ext);					
+						result(null, obj);					
+					});			
+			}else{			
+				useCache();
+			}
+		}else{
+			throw ('too large');
+		}
 	}catch(e){
 		result(e.toString(), null);
 	}	
@@ -243,6 +255,7 @@ PhotoFactory.prototype.imgUpload = function(strID, mimetype, file, fileName, fil
 	var nameMap = this.nameMap;
 	var typeMap = this.typeMap;
 	var extName = '';
+	var exif;
 	
 	Async.waterfall([
 	function(callback) {
@@ -293,6 +306,7 @@ PhotoFactory.prototype.imgUpload = function(strID, mimetype, file, fileName, fil
 	},
 	function(callback) {
 		new ExifImage({ image : fileHome + fileToPath + fileName + extName }, function(error, exifData) {
+			exif = exifData;
 			if (error) {
 				callback(null, error);
 			} else {
@@ -301,8 +315,12 @@ PhotoFactory.prototype.imgUpload = function(strID, mimetype, file, fileName, fil
 		});
 	},
 	function(exifData, callback) {
+		var ts = new Date().getTime();
+		var i = ts % 1000;
+		var t = new Mongodb.BSONPure.Timestamp(i, Math.floor(ts * 0.001));
+		
 		var dataObj = new PhotoData();
-		dataObj.set(strID, fileToPath, fileName + extName, hostname + fileToPath + fileName + extName, exifData, callback);
+		dataObj.set(strID, fileToPath, fileName + extName, hostname + 'API/Origin' + fileToPath + fileName + extName, exifData, t, callback);
 	},
 	function(obj, callback) {
 		dalPhoto.insert(obj, function(err, data) {
@@ -310,6 +328,57 @@ PhotoFactory.prototype.imgUpload = function(strID, mimetype, file, fileName, fil
 				callback('Insert photo data failed', err);
 			} else {
 				callback(null, data);
+			}
+		});
+	},
+	function(data, callback){
+		var appPath = data[0].path.toString().replace('photo/', '').replace(/\//g, '\'');	
+		
+		var 
+			latD = 0,
+			latM = 0,
+			latS = 0,
+			latR = '',
+			
+			lngD = 0,
+			lngM = 0,
+			lngs = 0,
+			lngR = '';			
+			
+		if(exif.gps.GPSLatitude){
+			latD = exif.gps.GPSLatitude[0];
+			latM = exif.gps.GPSLatitude[1];
+			latS = exif.gps.GPSLatitude[2];
+			latR = exif.gps.GPSLatitudeRef;
+		}
+		
+		if(exif.gps.GPSLongitude){
+			lngD = exif.gps.GPSLongitude[0];
+			lngM = exif.gps.GPSLongitude[1];
+			lngS = exif.gps.GPSLongitude[2];
+			lngR = exif.gps.GPSLongitudeRef;
+		}
+			
+		var sendObj = {
+			_id: data[0]._id,
+			url: data[0].url,
+			appUrl: hostname + 'API/photo/200/200/' + appPath + fileName + extName,
+			latD: latD,
+			latM: latM,
+			latS: latS,
+			latR: latR,
+			
+			lngD: lngD,
+			lngM: lngM,
+			lngS: lngS,
+			lngR: lngR
+		};
+		
+		gcmFactory.sendObj(sendObj, function(err, obj){
+			if(err){
+				callbcak('GCM Failed', err);
+			}else{
+				callback(null, obj);
 			}
 		});
 	}], function(err, resultObj) {

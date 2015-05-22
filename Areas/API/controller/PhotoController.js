@@ -93,12 +93,14 @@ PhotoController.prototype.imgUpload = function(req, res) {
 		
 		Async.waterfall([
 		function(callback) {
-			//callback(null);
+			callback(null);
+			/*
 			if(ipLimit[ip]){
 				callback(null);
-			}else{
+			}else{				
 				callback('Access Denied', 'PhotoController.imgUpload:ipLimit');
 			}
+			*/
 		},
 		function(callback){
 			if(req.headers['content-length'] <= uploadSize){

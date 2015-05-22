@@ -12,12 +12,14 @@ var PhotoData = function(){
 /*
  * result:function(err, obj);
  */
-PhotoData.prototype.set = function(id, path, filename, url, exif, result){
+PhotoData.prototype.set = function(id, path, filename, url, exif, createDate, result){	
+	
 	this.strID = id;
 	this.path = path;
 	this.filename = filename;
 	this.url = url;
 	this.exif = exif;
+	this.createDate = createDate;
 	
 	result(null, this);
 }

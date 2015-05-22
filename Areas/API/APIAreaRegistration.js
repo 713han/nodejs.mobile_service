@@ -8,7 +8,8 @@ var
 	UtilTool = require(appRoot + '/models/UtilTool'),	
 	GPS = require('./controller/GPSController'),
 	Photo = require('./controller/PhotoController'),
-	Stream = require('./controller/StreamController');
+	Stream = require('./controller/StreamController'),
+	GCM = require('./controller/GCMController');
 
 var cacheTime = Config.cacheTime,
 	uploadSize = Config.uploadSize;
@@ -20,10 +21,12 @@ var APIAreaRegistration = function(app){
 		tool = new UtilTool(),	
 		gps = new GPS(),
 		photo = new Photo(),
-		stream = new Stream();
+		stream = new Stream(),
+		gcm = new GCM();
 	
 	app.use(this.root ,Express.static(Path.join(appRoot, 'public/API'), { maxAge: cacheTime }));
-	app.use(this.root + '/data' ,Express.static(Path.join(appRoot, 'data/API'), { maxAge: cacheTime }));
+	app.use(this.root + '/data' ,Express.static(Path.join(appRoot, 'data/share'), { maxAge: cacheTime }));
+	app.use(this.root + '/OriginPhoto' ,Express.static(Path.join(Config.imgHome + '/photo'), { maxAge: cacheTime }));
 	app.get('views').push(__dirname + '/views/');
 	app.use(Busboy({	
 		limits: {
@@ -40,7 +43,7 @@ var APIAreaRegistration = function(app){
 	app.route(this.root + '/gps/upload')
 		.post(gps.gpsLogUpload);
 	
-	app.route(this.root + '/photo/:width(\\d+)/:height(\\d+)/:path')
+	app.route(this.root + '/photo/:width(\\d{1,4})/:height(\\d{1,4})/:path')
 		.get(photo.getImg);
 
 	app.route(this.root + '/photo/fileupload')
@@ -60,6 +63,24 @@ var APIAreaRegistration = function(app){
 	
 	app.route(this.root + '/stream/:name')
 		.get(stream.get);
+	
+	app.route(this.root + '/video2mp4/:name')
+		.get(stream.video2mp4);
+	
+	app.route(this.root + '/watermark/:name')
+		.get(stream.watermark);
+	
+	app.route(this.root + '/multOutput/:name')
+		.get(stream.multOutput);
+	
+	app.route(this.root + '/gcm/reg')
+		.post(gcm.reg);
+	
+	app.route(this.root + '/gcm/list')
+		.get(gcm.getRegList);
+	
+	app.route(this.root + '/gcm/send/:msg')
+		.get(gcm.sendMsg);
 };	
 
 module.exports = APIAreaRegistration;

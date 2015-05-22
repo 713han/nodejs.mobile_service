@@ -19,7 +19,7 @@
   			width="740" height="480"
 			
   			data-setup='{"example_option":true}'>
-			<source src="stream/FURIOUS7_SAMPLE.mp4" type="video/mp4"/>
+			<source src="data/FURIOUS7_SAMPLE.mp4" type="video/mp4"/>
 			<p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 		</video>
 		<a href="#" class="change1">1080p</a>&nbsp;<a href="#" class="change2">720p</a>&nbsp;<a href="#" class="change3">240p</a>
@@ -59,17 +59,17 @@
 		    	$changeBtn1.on('click', function(e){
 		    		e.stopPropagation();
     				e.preventDefault();
-		    		play('stream/FURIOUS7_SAMPLE.mp4');
+		    		play('data/FURIOUS7_SAMPLE.mp4');
 		    	});
 		    	$changeBtn2.on('click', function(e){
 		    		e.stopPropagation();
     				e.preventDefault();
-		    		play('stream/FURIOUS7_SAMPLE_720.mp4');
+		    		play('data/FURIOUS7_SAMPLE_720.mp4');
 		    	});
 		    	$changeBtn3.on('click', function(e){
 		    		e.stopPropagation();
     				e.preventDefault();
-		    		play('stream/FURIOUS7_SAMPLE_240.mp4');
+		    		play('data/FURIOUS7_SAMPLE_240.mp4');
 		    	});		    	
 		    }
 		
@@ -84,7 +84,7 @@
     				$myPlayer.currentTime(now);
     			});
     			$myPlayer.play();
-		    }
+		    };
 		    
 		    return o;
 		
