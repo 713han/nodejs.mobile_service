@@ -342,7 +342,7 @@ PhotoFactory.prototype.imgUpload = function(strID, mimetype, file, fileName, fil
 			
 			lngD = 0,
 			lngM = 0,
-			lngs = 0,
+			lngS = 0,
 			lngR = '';			
 			
 		if(exif.gps.GPSLatitude){
