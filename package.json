@@ -35,6 +35,7 @@
     "connect-busboy": "^0.0.1",
     "fluent-ffmpeg": "~2.0.0-rc3",
     "node-gcm": "~0.9.15",
-    "xml2js": "~0.4.8"
+    "xml2js": "~0.4.8",
+    "mkdirp": "~0.5.1"
   }
 }

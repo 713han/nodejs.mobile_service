@@ -1,6 +1,7 @@
 var
 	Async = require('async'),
 	Fs = require('fs'),
+	Mkdirp = require('mkdirp');
 	Path = require('path'),
 	Gm = require('gm'),
 	LruCache = require('lru-cache'),
@@ -25,6 +26,7 @@ var
 	
 	gcmFactory = new GCMFactory();
 
+/*
 Fs.mkdirParent = function(dirPath, mode, callback) {
 	//Call the standard fs.mkdir
 	Fs.mkdir(dirPath, mode, function(error) {
@@ -32,14 +34,16 @@ Fs.mkdirParent = function(dirPath, mode, callback) {
 		if (error && error.errno === 34) {
 			//Create all the parents recursively			
 			Fs.mkdirParent(Path.dirname(dirPath), mode, function(){});
+			//Fs.mkdirParent(Path.dirname(dirPath), mode, callback);
 			//And then the directory			
 			Fs.mkdirParent(dirPath, mode, function(){});
+			//Fs.mkdirParent(dirPath, mode, callback);
 		}
 		//Manually run the callback since we used our own callback to do all these
 		callback && callback(error);
 	});
 };
-	
+*/
 var getExtension = function(filename) {
 	var i = filename.lastIndexOf('.');
 	return (i < 0) ? '' : filename.substr(i).toLowerCase();
@@ -278,10 +282,20 @@ PhotoFactory.prototype.imgUpload = function(strID, mimetype, file, fileName, fil
 	function(result, callback) {
 		extName = nameMap[result];
 		if (typeMap[result] === true) {
-			Fs.mkdirParent(fileHome + fileToPath, '0755', function(err) {
+			/*Fs.mkdirParent(fileHome + fileToPath, '0755', function(err) {
 				if (err) {
 					// nothing
 					// callback('Created parent directory failed.:' + err.toString(),'PhotoFactory.imgUpload:mkdirParent');
+					console.log(err);
+				}
+				callback(null);
+			});*/
+			
+			Mkdirp(fileHome + fileToPath,function(err) {
+				if (err) {
+					// nothing
+					// callback('Created parent directory failed.:' + err.toString(),'PhotoFactory.imgUpload:mkdirParent');
+					console.log(err);
 				}
 				callback(null);
 			});
@@ -298,6 +312,7 @@ PhotoFactory.prototype.imgUpload = function(strID, mimetype, file, fileName, fil
 	function(callback) {
 		Fs.rename(fileFromPath + fileName, fileHome + fileToPath + fileName + extName, function(err) {
 			if (err) {
+				console.log(err);
 				callback('file rename failed.', 'PhotoFactory.imgUpload:rename');
 			} else {
 				callback(null);

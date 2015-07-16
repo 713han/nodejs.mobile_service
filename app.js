@@ -23,7 +23,7 @@ var app = Express(),
 
 // all environments
 app.engine('ejs', EjsEngine);
-app.set('port', process.env.PORT || 80);
+app.set('port', process.env.PORT || 8080);
 
 /*
 app.set('views', [__dirname + '/Areas/EventsAdmin/views/',
