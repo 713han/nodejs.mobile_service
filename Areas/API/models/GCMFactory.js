@@ -98,7 +98,7 @@ GCMFactory.prototype.reg = function(info, result) {
 
 GCMFactory.prototype.sendMsg = function(strMsg, result) {
 	var registrationIds = [];
-	var sender = new Gcm.Sender('AIzaSyA4i0FFdL45KyUXPYS7_MdMv_5zOaZQS0I');
+	var sender = new Gcm.Sender(Config.gcmSender);
 	msg.addData('msg', strMsg);
 	
 	Async.waterfall([
@@ -142,7 +142,7 @@ GCMFactory.prototype.sendMsg = function(strMsg, result) {
 
 GCMFactory.prototype.sendObj = function(obj, result) {
 	var registrationIds = [];
-	var sender = new Gcm.Sender('AIzaSyA4i0FFdL45KyUXPYS7_MdMv_5zOaZQS0I');
+	var sender = new Gcm.Sender(Config.gcmSender);
 	msg.addData(obj);
 	
 	Async.waterfall([

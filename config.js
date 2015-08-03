@@ -83,5 +83,6 @@ config.ipLimit = {
 	'10.2.3.62' : true
 };
 
+config.gcmSender = '';
 
 module.exports = config;
